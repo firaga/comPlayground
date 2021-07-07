@@ -9,14 +9,34 @@
 namespace tests;
 
 
-use ParentClass;
+use ChildClass;
 use PHPUnit\Framework\TestCase;
 
 class InheritTest extends TestCase
 {
     public function testInherit()
     {
-        $parent = new ParentClass();
-        echo "here";
+        $obj = new ChildClass();
+        $reflectionClass = new \ReflectionClass($obj);
+        do {
+            $properties = $reflectionClass->getProperties();
+            $methods = $reflectionClass->getMethods();
+            echo $reflectionClass->getName() . chr(10);
+            foreach ($properties as $property) {
+                $property->setAccessible(true);
+                $name = $property->getName();
+                $value = $property->getValue($obj);
+                echo $name . chr(9) . $value . chr(10);
+            }
+        } while ($reflectionClass = $reflectionClass->getParentClass());
+    }
+
+    public function testClass()
+    {
+        $obj = new ChildClass();
+//        var_dump($obj);
+//        var_dump($obj->getPri());
+        var_dump($obj->getPub());
+        $this->assertEquals(1, 1,);
     }
 }
